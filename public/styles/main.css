@@ -1,0 +1,23 @@
+body{
+  background-color: lightcyan;
+}
+
+.search{
+  width: 40%;
+  position: relative;
+  right:40px;
+}
+
+footer {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  position: fixed;
+}
+
+#register{
+  margin-bottom: 60px;
+}
+
+
+

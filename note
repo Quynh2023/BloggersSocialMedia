@@ -1,0 +1,19 @@
+Common_npm_project:
+
+public/styles/main.css
+views/main.ejs
+index.js
+
+For setup a project:
+npm init -y
+npm i express ejs axios body-parser
+package.json: add "type": "module"
+
+setup main.ejs: html + embedded js
+
+setup index.js: get/post/put/patch/delete to run the app
+
+npm install express pg passport passport-local express-session bcrypt
+
+passport authenticaltion: https://medium.com/@prashantramnyc/node-js-with-passport-authentication-simplified-76ca65ee91e5
+
