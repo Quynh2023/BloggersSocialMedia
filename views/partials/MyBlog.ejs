@@ -1,35 +1,38 @@
-<span style="position:absolute; left: 20px;font-size: 20px; color: blueviolet;">Hello, <%= userName %>!</span>
+
+<span style="position:absolute; left: 20px;font-size: 20px; color: blueviolet; ">Hello, <%= userName %>!</span>
 
 <div style="display: flex; justify-content: flex-end; margin-right: 10px;" >
-    <a data-mdb-ripple-init type="button" class="btn btn-warning me-3" style="font-size: 16px;" href="">
+    <a data-mdb-ripple-init type="button" class="btn btn-warning me-3" style="font-size: 16px;" href="/createBlog/<%= userId%>">
       Create new post
     </a>
 </div>
 
 <h3 style="text-align: center; margin-top: 10px; margin-bottom: 40px;">Your Posts</h3>
 
-<div style="display: flex; justify-content: center;">
-  <div class="card mb-3" style="max-width: 50%;">
-    <div class="row g-0">
-      <div class="col-md-4">
-        <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/182.webp" class="img-fluid rounded-start"
-          alt="Sunset Over the Sea" style="object-fit: cover; height: 100%;" />
-      </div>
-      <div class="col-md-8">
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">
-            This is a wider card with supporting text below as a natural lead-in to
-            additional content. This content is a little bit longer.
-          </p>
-          <p class="card-text">
-            <small class="text-muted">Date: 2024/06/01</small><br />
-          </p>
-          <button class="btn btn-primary me-2" style="font-size: 17px; padding: 5px 10px;">✏️</button>
-          <button class="btn btn-danger" style="font-size: 17px; padding: 5px 15px;">🗑</button>
+<div>
+  <% for(let blog of blogs) { %>
+    <div style="display: flex; justify-content: center; margin-top: 20px; margin-bottom: 20px;">
+      <div class="card mb-3" style="width: 50%;">
+        <div class="row g-0">
+          <div class="col-md-4">
+            <img  src="data:image/png;base64, <%= blog.image.toString('base64') %>" class="img-fluid rounded-start"
+              alt="blog image" style="object-fit: cover; height: 100%; height: 200px; width: 300px" />
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title"><%= blog.title %></h5>
+              <p class="card-text">
+                Type: <%= blog.type%>
+              </p>
+              <p class="card-text">
+                <small class="text-muted">Date: <%= new Date(blog.date_and_time).toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true })%></small><br />
+              </p>
+              <a style="color: blue" href="/myBlog_displayDetail/<%= blog.id%>" >Learn more ➡️</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  <%}%>
 </div>
 

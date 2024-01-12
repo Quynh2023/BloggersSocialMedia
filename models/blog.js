@@ -1,0 +1,93 @@
+const { Pool } = require('pg');
+const bcrypt = require('bcrypt');
+
+const pool = new Pool({
+  user: 'postgres',
+  host: 'localhost',
+  database: 'blog',
+  password: 'Quynh2882',
+  port: 5432,
+});
+
+async function uploadBlog(title, content, type, image, userID) {
+  try {
+    // Use a library like 'pg-promise' or 'node-postgres' to interact with PostgreSQL
+    const result = await pool.query('INSERT INTO blogs (title, content, type, image, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING id', [title, content, type, Buffer.from(image.buffer), userID]);
+
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function getAllBlogs(userID) {
+  try {
+    const result = await pool.query('SELECT id, title, content, type, image, date_and_time FROM blogs WHERE user_id = $1 ORDER BY date_and_time DESC', [userID]);   //to display the most recent blogs
+    return result.rows;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+async function getBlogById(blogId) {
+  try {
+    const result = await pool.query('SELECT id, title, content, type, image, date_and_time FROM blogs WHERE id = $1', [blogId]);  
+    return result.rows[0];
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+async function deleteBlog(blogId) {
+  try {
+    const result = await pool.query('DELETE FROM blogs WHERE id = $1', [blogId]);
+    return result.rows;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+async function updateBlog(blog) {
+  try {
+    const { id, title, content, type, image} = blog;
+
+    const result = await pool.query(
+      'UPDATE blogs SET title = $1, content = $2, type = $3, image = $4,  date_and_time = CURRENT_TIMESTAMP WHERE id = $5 RETURNING *',
+      [title, content, type, Buffer.from(image), id]
+    );
+
+    if (result.rowCount === 0) {
+      // No blog found with the given ID
+      console.info('No blog found with the given ID');
+      return null;
+    }
+
+    // Return the updated blog
+    return result.rows[0];
+  } catch (error) {
+    console.error('Error updating blog:', error);
+    throw error;
+  }
+}
+
+async function getAllBlogsForAllUsers() {
+  try {
+    const result = await pool.query('SELECT * FROM blogs ORDER BY date_and_time DESC');   //to display the most recent blogs
+    return result.rows;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+
+module.exports = {
+  uploadBlog,
+  getAllBlogs,
+  getBlogById,
+  deleteBlog,
+  updateBlog,
+  getAllBlogsForAllUsers,
+};

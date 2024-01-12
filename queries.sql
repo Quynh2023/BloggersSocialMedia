@@ -4,3 +4,20 @@ CREATE TABLE users(
 	email VARCHAR(100) NOT NULL UNIQUE,
 	password VARCHAR(100) NOT NULL
 )
+
+CREATE TABLE blog (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(500) NOT NULL,
+  content VARCHAR(10000) NOT NULL,
+  type VARCHAR(500) NOT NULL,
+  image BYTEA NOT NULL,
+  date_and_time TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+  user_id INTEGER REFERENCES users(id)
+);
+
+CREATE TABLE favorite (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id),
+  blog_id INTEGER REFERENCES blog(id)	
+);
+
