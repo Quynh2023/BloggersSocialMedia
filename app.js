@@ -68,11 +68,12 @@ app.post('/login', (req, res, next) => {
       return res.render('LoginPage', {errorMessage: info.errorMessage});
     }
 
-    req.logIn(user, (err) => {
+    req.logIn(user, async(err) => {
       if (err) {
         return next(err);
       }
-      return res.render('Homepage', {userName: capitalizeFirstLetter(user.name)});
+      const blogs = await Blog.getAllBlogsForAllUsers();
+      return res.render('HomePage', {userName: capitalizeFirstLetter(user.name), blogs});
     });
   })(req, res, next);
 });
@@ -170,16 +171,16 @@ app.post('/update/:id', upload.single('image'), async(req, res) => {
   }
 });
 
-app.get('/homepage', async (req, res) => {
+app.get('/homepage/', async (req, res) => {
   try {
-    // const blogs = await Blog.getAllBlogsForAllUsers();
-    // res.render('HomePage', { userName: capitalizeFirstLetter(req.user.name), blogs });
-    res.render('HomePage', {userName: capitalizeFirstLetter(req.user.name)});
+    const blogs = await Blog.getAllBlogsForAllUsers();
+    res.render('HomePage', {userName: capitalizeFirstLetter(req.user.name), blogs});
   } catch (error) {
     console.error('Error fetching blogs:', error);
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 //---------------------check app running------------------------------------------
 app.listen(port, () => {
