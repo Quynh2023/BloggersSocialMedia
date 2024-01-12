@@ -74,7 +74,7 @@ async function updateBlog(blog) {
 
 async function getAllBlogsForAllUsers() {
   try {
-    const result = await pool.query('SELECT * FROM blogs ORDER BY date_and_time DESC');   //to display the most recent blogs
+    const result = await pool.query('SELECT id, title, content, type, image, date_and_time  FROM blogs ORDER BY date_and_time DESC');   //to display the most recent blogs
     return result.rows;
   } catch (error) {
     console.error(error);

@@ -77,16 +77,6 @@ app.post('/login', (req, res, next) => {
   })(req, res, next);
 });
 
-app.get('/homepage', async (req, res) => {
-  try {
-    res.render('Homepage', { userName: capitalizeFirstLetter(req.user.name)});
-  } catch (error) {
-    console.error('Error fetching blogs:', error);
-    res.status(500).send('Internal Server Error');
-  }
-});
-
-
 app.get('/myBlog/:id', async(req, res)=>{
   const userId = req.user.id;
   const blogs = await Blog.getAllBlogs(userId);
@@ -176,6 +166,17 @@ app.post('/update/:id', upload.single('image'), async(req, res) => {
   } catch (error) {
     console.error('Error updating blog:', error);
     // Handle the error appropriately, e.g., render an error page or redirect to an error route
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.get('/homepage', async (req, res) => {
+  try {
+    // const blogs = await Blog.getAllBlogsForAllUsers();
+    // res.render('HomePage', { userName: capitalizeFirstLetter(req.user.name), blogs });
+    res.render('HomePage', {userName: capitalizeFirstLetter(req.user.name)});
+  } catch (error) {
+    console.error('Error fetching blogs:', error);
     res.status(500).send('Internal Server Error');
   }
 });
