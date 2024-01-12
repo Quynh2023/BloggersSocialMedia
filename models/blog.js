@@ -74,14 +74,13 @@ async function updateBlog(blog) {
 
 async function getAllBlogsForAllUsers() {
   try {
-    const result = await pool.query('SELECT id, title, content, type, image, date_and_time  FROM blogs ORDER BY date_and_time DESC');   //to display the most recent blogs
+    const result = await pool.query('SELECT blogs.id AS "id", title, content, type, image, date_and_time, INITCAP(name) AS "author" FROM blogs INNER JOIN users ON blogs.user_id = users.id ORDER BY date_and_time DESC');
     return result.rows;
   } catch (error) {
     console.error(error);
     throw error;
   }
 }
-
 
 module.exports = {
   uploadBlog,

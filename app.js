@@ -158,7 +158,7 @@ app.post('/update/:id', upload.single('image'), async(req, res) => {
     if (req.body.title !== undefined) blog.title = req.body.title;
     if (req.body.content !== undefined) blog.content = req.body.content;
     if (req.file !== undefined) blog.image = req.file.buffer;
-    if (req.file !== undefined) blog.type = req.body.type;
+    if (req.body.type !== undefined) blog.type = req.body.type;
 
     await Blog.updateBlog(blog);
 

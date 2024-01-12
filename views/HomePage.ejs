@@ -83,7 +83,7 @@
             <div class="row g-0">
               <div class="col-md-4">
                 <img src="data:image/png;base64, <%= blog.image.toString('base64') %>" class="img-fluid rounded-start"
-                  alt="blog image" style="object-fit: cover; height: 100%; height: 200px; width: 300px;" />
+                  alt="blog image" style="object-fit: cover; height: 100%; height: 230px; width: 300px;" />
               </div>
               <div class="col-md-8">
                 <div class="card-body">
@@ -92,6 +92,9 @@
                   </h5>
                   <p class="card-text">
                     Type: <%= blog.type%>
+                  </p>
+                  <p class="card-text">
+                    Author: <%= blog.author%>
                   </p>
                   <p class="card-text">
                     <small class="text-muted">Date: <%= new Date(blog.date_and_time).toLocaleString('en-US', {

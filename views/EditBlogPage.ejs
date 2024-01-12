@@ -52,35 +52,44 @@
                     </div>
                   </div>
                   <hr class="mx-n3">
+                </div>
+                <hr class="mx-n3">
+                <div class="row align-items-center py-3">
+                  <div class="col-md-3 ps-5">
+                    <h6 class="mb-0">Content</h6>
                   </div>
-                  <hr class="mx-n3">
-                  <div class="row align-items-center py-3">
-                    <div class="col-md-3 ps-5">
-                      <h6 class="mb-0">Content</h6>
-                    </div>
-                    <div class="col-md-9 pe-5">
-                      <textarea class="form-control" rows="5" name="content"><%= blog.content %></textarea>
-                    </div>
+                  <div class="col-md-9 pe-5">
+                    <textarea class="form-control" rows="5" name="content"><%= blog.content %></textarea>
                   </div>
-                  <hr class="mx-n3">
-                  <div class="row align-items-center py-3">
-                    <div class="col-md-3 ps-5">
-                      <h6 class="mb-0">Image</h6>
-                    </div>
-                    <div class="col-md-9 pe-5">
-                      <input class="form-control form-control-lg" id="formFileLg" type="file" name="image" />
-                    </div>
+                </div>
+                <hr class="mx-n3">
+                <div class="row align-items-center py-3">
+                  <div class="col-md-3 ps-5">
+                    <h6 class="mb-0">Image</h6>
                   </div>
-                  <hr class="mx-n3">
-                  <div class="px-5 py-4">
-                    <button type="submit" class="btn btn-primary btn-lg">Update Post</button>
-                    <a href="/myBlog/<%= userId %>" type="button" class="btn btn-danger btn-lg"
-                      style="margin-left: 20px;">Cancel</a>
+                  <div class="col-md-9 pe-5">
+                    <input class="form-control form-control-lg" id="formFileLg" type="file" name="image" />
                   </div>
+                </div>
+                <hr class="mx-n3">
+                <div class="px-5 py-4">
+                  <button type="submit" class="btn btn-primary btn-lg">Update Post</button>
+                  <a href="/myBlog/<%= userId %>" type="button" class="btn btn-danger btn-lg"
+                    style="margin-left: 20px;">Cancel</a>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        </div>
       </section>
     </form>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        // Example: Direct comparison for testing
+        const blogType = '<%= blog.type %>';
+        document.querySelector(`[name="type"] option[value="${blogType}"]`).selected = true;
+      });
+    </script>
+    
