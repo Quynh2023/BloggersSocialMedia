@@ -91,6 +91,13 @@ app.get('/favorites', async(req, res) => {
   res.render('FavoritePage', { userName: capitalizeFirstLetter(req.user.name), blogs })
 });
 
+app.get('/types/:id', async(req, res) => {
+  const userId = req.user.id;
+  const type = req.params.id;
+  const blogs = await Blog.getAllBlogsForAllUsersWithFavoriteType(userId, type);
+  res.render('BlogTypePage', { userName: capitalizeFirstLetter(req.user.name), blogs, type })
+});
+
 app.get('/createBlog/:id', (req, res) => {
   const userId = req.user.id;
   res.render('CreateBlogPage', { userName: capitalizeFirstLetter(req.user.name), userId });
@@ -126,6 +133,14 @@ app.get('/favorites_displayDetail/:id', async (req, res) => {
   const userId = req.user.id;
   const isFavorited = await Blog.isFavorited(userId, blogId);
   res.render('Favorite_DisplayDetailPage', { userName: capitalizeFirstLetter(req.user.name), userId, blog, isFavorited });
+});
+
+app.get('/blogtype_displayDetail/:id', async (req, res) => {
+  const blogId = req.params.id;
+  const blog = await Blog.getBlogById(blogId);
+  const userId = req.user.id;
+  const isFavorited = await Blog.isFavorited(userId, blogId);
+  res.render('BlogType_DisplayDetailPage', { userName: capitalizeFirstLetter(req.user.name), userId, blog, isFavorited });
 });
 
 app.get('/delete/:id', async (req, res) => {
@@ -266,6 +281,51 @@ app.get('/removeFavoriteInFavoritePage/:id', async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to add favorite.' });
   }
 });
+
+app.get('/addFavoriteInBlogTypePage/:id', async (req, res) => {
+  try {
+    const blogId = req.params.id;
+    const blog = await Blog.getBlogById(blogId);
+    const userId = req.user.id;
+
+    let isFavorited = await Blog.isFavorited(userId, blogId);
+
+    if (!isFavorited) {
+      await Blog.addFavorite(userId, blogId);
+
+      isFavorited = true;
+
+      // Send a response to the client
+      res.render('BlogType_DisplayDetailPage', { userName: capitalizeFirstLetter(req.user.name), userId, blog, isFavorited })
+    }
+  } catch (error) {
+    console.error('Error adding favorite:', error);
+    res.status(500).json({ success: false, message: 'Failed to add favorite.' });
+  }
+});
+
+app.get('/removeFavoriteInBlogTypePage/:id', async (req, res) => {
+  try {
+    const blogId = req.params.id;
+    const blog = await Blog.getBlogById(blogId);
+    const userId = req.user.id;
+
+    let isFavorited = await Blog.isFavorited(userId, blogId);
+
+    if (isFavorited) {
+      await Blog.removeFavorite(userId, blogId);
+
+      isFavorited = false;
+
+      // Send a response to the client
+      res.render('BlogType_DisplayDetailPage', { userName: capitalizeFirstLetter(req.user.name), userId, blog, isFavorited })
+    }
+  } catch (error) {
+    console.error('Error adding favorite:', error);
+    res.status(500).json({ success: false, message: 'Failed to add favorite.' });
+  }
+});
+
 
 
 

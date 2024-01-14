@@ -1,4 +1,4 @@
-<%- include('partials/Header.ejs'); -%>
+<%- include('partials/LoginPageHeader.ejs'); -%>
 
 <section class="vh-100" style="background-color: #eee">
   <div class="container h-100">
@@ -19,22 +19,22 @@
                 <form action="/register" method="POST" class="mx-1 mx-md-4">
                   <!-- Name input -->
                   <div class="form-group" style="margin-bottom: 15px">
-                    <label for="exampleInputEmail1">Name</label>
+                    <label for="exampleInputEmail1">Name*</label>
                     <input type="name" name="name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-                      placeholder="" />
+                      placeholder="" required/>
                   </div>
 
                   <!-- Email input -->
                   <div class="form-group" style="margin-bottom: 15px">
-                    <label for="exampleInputEmail1">Email</label>
+                    <label for="exampleInputEmail1">Email*</label>
                     <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-                      placeholder="" />
+                      placeholder="" required/>
                   </div>
 
                   <!-- Password input -->
                   <div class="form-group" style="margin-bottom: 15px">
-                    <label for="exampleInputPassword1">Password</label>
-                    <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="" />
+                    <label for="exampleInputPassword1">Password*</label>
+                    <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="" required/>
                   </div>
 
                   <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
