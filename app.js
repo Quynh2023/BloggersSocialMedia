@@ -13,7 +13,7 @@ const multer = require('multer');
 const app = express();
 const port = 3000;
 
-const storage = multer.memoryStorage(); 
+const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 //use the static public file
@@ -32,19 +32,19 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //-------------------------Main App----------------------------------------------
-app.get("/", (req, res)=>{
-  res.render("LoginPage", {errorMessage: false});
+app.get("/", (req, res) => {
+  res.render("LoginPage", { errorMessage: false });
 });
 
-app.get("/login", (req, res)=>{
-  res.render("LoginPage", {errorMessage: false});
+app.get("/login", (req, res) => {
+  res.render("LoginPage", { errorMessage: false });
 });
 
-app.get("/register", (req, res)=>{
-  res.render("RegisterPage", {errorMessage: false});
+app.get("/register", (req, res) => {
+  res.render("RegisterPage", { errorMessage: false });
 });
 
-app.post("/register", async(req, res)=>{
+app.post("/register", async (req, res) => {
   try {
     const { name, email, password } = req.body;
     await User.createUser(name, email, password);
@@ -65,35 +65,36 @@ app.post('/login', (req, res, next) => {
     }
 
     if (!user) {
-      return res.render('LoginPage', {errorMessage: info.errorMessage});
+      return res.render('LoginPage', { errorMessage: info.errorMessage });
     }
 
-    req.logIn(user, async(err) => {
+    req.logIn(user, async (err) => {
       if (err) {
         return next(err);
       }
-      const blogs = await Blog.getAllBlogsForAllUsers();
-      return res.render('HomePage', {userName: capitalizeFirstLetter(user.name), blogs});
+      const userId = req.user.id;
+      const blogs = await Blog.getAllBlogsForAllUsersWithFavorite(userId);
+      return res.render('HomePage', { userName: capitalizeFirstLetter(user.name), blogs });
     });
   })(req, res, next);
 });
 
-app.get('/myBlog/:id', async(req, res)=>{
+app.get('/myBlog/:id', async (req, res) => {
   const userId = req.user.id;
   const blogs = await Blog.getAllBlogs(userId);
-  res.render('MyBlogPage', {userName: capitalizeFirstLetter(req.user.name), userId, blogs});
+  res.render('MyBlogPage', { userName: capitalizeFirstLetter(req.user.name), userId, blogs });
 });
 
-app.get('/favorites', (req, res)=>{
-  res.render('FavoritePage', {userName: capitalizeFirstLetter(req.user.name)})
+app.get('/favorites', (req, res) => {
+  res.render('FavoritePage', { userName: capitalizeFirstLetter(req.user.name) })
 });
 
 app.get('/createBlog/:id', (req, res) => {
   const userId = req.user.id;
-  res.render('CreateBlogPage', {userName: capitalizeFirstLetter(req.user.name), userId});
+  res.render('CreateBlogPage', { userName: capitalizeFirstLetter(req.user.name), userId });
 });
 
-app.post('/createBlog/:id', upload.single('image'), async(req, res) => {
+app.post('/createBlog/:id', upload.single('image'), async (req, res) => {
   const title = req.body.title;
   const content = req.body.content;
   const type = req.body.type;
@@ -104,17 +105,17 @@ app.post('/createBlog/:id', upload.single('image'), async(req, res) => {
     // Handle the case when no image is uploaded
     return res.status(400).json({ error: 'No image uploaded' });
   }
-  
+
   await Blog.uploadBlog(title, content, type, image, userID);
 
   res.redirect(`/myBlog/${userID}`);
 });
 
-app.get('/myBlog_displayDetail/:id', async(req, res)=>{
+app.get('/myBlog_displayDetail/:id', async (req, res) => {
   const blogId = req.params.id;
   const blog = await Blog.getBlogById(blogId);
   const userId = req.user.id;
-  res.render('MyBlog_DisplayDetailPage', {userName: capitalizeFirstLetter(req.user.name), userId, blog})
+  res.render('MyBlog_DisplayDetailPage', { userName: capitalizeFirstLetter(req.user.name), userId, blog })
 });
 
 app.get('/delete/:id', async (req, res) => {
@@ -124,7 +125,7 @@ app.get('/delete/:id', async (req, res) => {
 
   try {
     await Blog.deleteBlog(blogId);
-    
+
     res.redirect(`/myblog/${userId}`);
   } catch (error) {
     console.error('Error deleting blog:', error);
@@ -132,16 +133,16 @@ app.get('/delete/:id', async (req, res) => {
   }
 });
 
-app.get('/edit/:id', async(req, res) => {
+app.get('/edit/:id', async (req, res) => {
   // Extract the blog ID from the URL parameters
   const blogId = req.params.id;
   const blog = await Blog.getBlogById(blogId);
   const userId = req.user.id;
 
-  res.render('EditBlogPage', { userName: capitalizeFirstLetter(req.user.name), blog, blogId, userId});
+  res.render('EditBlogPage', { userName: capitalizeFirstLetter(req.user.name), blog, blogId, userId });
 });
 
-app.post('/update/:id', upload.single('image'), async(req, res) => {
+app.post('/update/:id', upload.single('image'), async (req, res) => {
   try {
     // Extract the blog ID from the URL parameters
     const blogId = req.params.id;
@@ -157,8 +158,8 @@ app.post('/update/:id', upload.single('image'), async(req, res) => {
     // Update the blog in the database with the new data
     if (req.body.title !== undefined) blog.title = req.body.title;
     if (req.body.content !== undefined) blog.content = req.body.content;
-    if (req.file !== undefined) blog.image = req.file.buffer;
     if (req.body.type !== undefined) blog.type = req.body.type;
+    if (req.file !== undefined) blog.image = req.file.buffer;
 
     await Blog.updateBlog(blog);
 
@@ -171,15 +172,70 @@ app.post('/update/:id', upload.single('image'), async(req, res) => {
   }
 });
 
-app.get('/homepage/', async (req, res) => {
+app.get('/homepage', async (req, res) => {
   try {
-    const blogs = await Blog.getAllBlogsForAllUsers();
-    res.render('HomePage', {userName: capitalizeFirstLetter(req.user.name), blogs});
+    const userId = req.user.id;
+    const blogs = await Blog.getAllBlogsForAllUsersWithFavorite(userId);
+    return res.render('HomePage', { userName: capitalizeFirstLetter(req.user.name), blogs });
   } catch (error) {
     console.error('Error fetching blogs:', error);
     res.status(500).send('Internal Server Error');
   }
 });
+
+app.get('/homepage_displayDetail/:id', async (req, res) => {
+  const blogId = req.params.id;
+  const blog = await Blog.getBlogById(blogId);
+  const userId = req.user.id;
+  const isFavorited = await Blog.isFavorited(userId, blogId);
+  res.render('Homepage_DisplayDetailPage', { userName: capitalizeFirstLetter(req.user.name), userId, blog, isFavorited });
+});
+
+app.get('/addFavorite/:id', async (req, res) => {
+  try {
+    const blogId = req.params.id;
+    const blog = await Blog.getBlogById(blogId);
+    const userId = req.user.id;
+
+    let isFavorited = await Blog.isFavorited(userId, blogId);
+
+    if (!isFavorited) {
+      await Blog.addFavorite(userId, blogId);
+
+      isFavorited = true;
+
+      // Send a response to the client
+      res.render('Homepage_DisplayDetailPage', { userName: capitalizeFirstLetter(req.user.name), userId, blog, isFavorited })
+    }
+  } catch (error) {
+    console.error('Error adding favorite:', error);
+    res.status(500).json({ success: false, message: 'Failed to add favorite.' });
+  }
+});
+
+app.get('/removeFavorite/:id', async (req, res) => {
+  try {
+    const blogId = req.params.id;
+    const blog = await Blog.getBlogById(blogId);
+    const userId = req.user.id;
+
+    let isFavorited = await Blog.isFavorited(userId, blogId);
+
+    if (isFavorited) {
+      await Blog.removeFavorite(userId, blogId);
+
+      isFavorited = false;
+
+      // Send a response to the client
+      res.render('Homepage_DisplayDetailPage', { userName: capitalizeFirstLetter(req.user.name), userId, blog, isFavorited })
+    }
+  } catch (error) {
+    console.error('Error adding favorite:', error);
+    res.status(500).json({ success: false, message: 'Failed to add favorite.' });
+  }
+});
+
+
 
 
 //---------------------check app running------------------------------------------

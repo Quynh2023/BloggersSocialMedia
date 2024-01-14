@@ -31,7 +31,7 @@ async function getAllBlogs(userID) {
 
 async function getBlogById(blogId) {
   try {
-    const result = await pool.query('SELECT id, title, content, type, image, date_and_time FROM blogs WHERE id = $1', [blogId]);  
+    const result = await pool.query('SELECT blogs.id AS "id", title, content, type, image, date_and_time, INITCAP(name) AS "author" FROM blogs INNER JOIN users ON blogs.user_id = users.id WHERE blogs.id = $1', [blogId]); 
     return result.rows[0];
   } catch (error) {
     console.error(error);
@@ -82,6 +82,46 @@ async function getAllBlogsForAllUsers() {
   }
 }
 
+async function getAllBlogsForAllUsersWithFavorite(userId) {
+  try {
+    const resultFavorite = await pool.query('SELECT blogs.id AS "id", title, content, type, image, date_and_time, INITCAP(name) AS "author", favorite.id AS "favoriteId" FROM blogs INNER JOIN users ON blogs.user_id = users.id LEFT JOIN favorite ON blogs.id = favorite.blog_id AND $1 = favorite.user_id ORDER BY date_and_time DESC', [userId]);
+    return resultFavorite.rows;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+async function addFavorite(userId, blogId) {
+  try {
+    const result = await pool.query('INSERT INTO favorite (user_id, blog_id) VALUES ($1, $2) RETURNING id', [userId, blogId]);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+async function isFavorited(userId, blogId) {
+  try {
+    const result = await pool.query('SELECT * FROM favorite WHERE user_id = $1 AND blog_id = $2', [userId, blogId]);
+    return result.rows.length !== 0;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+async function removeFavorite(userId, blogId) {
+  try {
+    const result = await pool.query('DELETE FROM favorite WHERE user_id = $1 AND blog_id = $2', [userId, blogId]);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+
+
 module.exports = {
   uploadBlog,
   getAllBlogs,
@@ -89,4 +129,8 @@ module.exports = {
   deleteBlog,
   updateBlog,
   getAllBlogsForAllUsers,
+  addFavorite,
+  isFavorited,
+  removeFavorite,
+  getAllBlogsForAllUsersWithFavorite,
 };

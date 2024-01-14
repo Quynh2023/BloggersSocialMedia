@@ -87,9 +87,15 @@
               </div>
               <div class="col-md-8">
                 <div class="card-body">
-                  <h5 class="card-title">
-                    <%= blog.title %>
-                  </h5>
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h5 class="card-title">
+                      <%= blog.title %>
+                    </h5>
+                    <% if (blog.favoriteId !== null) { %>
+                      <span>❤️</span>
+                    <% } %>
+                  </div>
+
                   <p class="card-text">
                     Type: <%= blog.type%>
                   </p>
@@ -101,7 +107,7 @@
                         weekday: 'long' , year: 'numeric' , month: 'numeric' , day: 'numeric' , hour: 'numeric' ,
                         minute: 'numeric' , second: 'numeric' , hour12: true })%></small><br />
                   </p>
-                  <a style="color: blue" href="/myBlog_displayDetail/<%= blog.id%>">Learn more ➡️</a>
+                  <a style="color: blue" href="/homepage_displayDetail/<%= blog.id%>">Learn more ➡️</a>
                 </div>
               </div>
             </div>
