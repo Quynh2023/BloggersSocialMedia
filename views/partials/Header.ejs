@@ -20,7 +20,7 @@
 <body>
   <main>
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary" style="font-size:18px;">
+  <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary navbar-fixed" style="font-size:18px;">
     <!-- Container wrapper -->
     <div class="container-fluid">
       <!-- Collapsible wrapper -->
@@ -85,3 +85,14 @@
 
   <!-- Link to MDB -->
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.1.0/mdb.umd.min.js"></script>
+
+  <script>
+    // Add a class to the body when the window is scrolled to adjust padding
+    $(window).scroll(function () {
+      if ($(this).scrollTop() > 0) {
+        $('body').addClass('with-fixed-navbar');
+      } else {
+        $('body').removeClass('with-fixed-navbar');
+      }
+    });
+  </script>

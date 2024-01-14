@@ -85,8 +85,10 @@ app.get('/myBlog/:id', async (req, res) => {
   res.render('MyBlogPage', { userName: capitalizeFirstLetter(req.user.name), userId, blogs });
 });
 
-app.get('/favorites', (req, res) => {
-  res.render('FavoritePage', { userName: capitalizeFirstLetter(req.user.name) })
+app.get('/favorites', async(req, res) => {
+  const userId = req.user.id;
+  const blogs = await Blog.getAllBlogsForAllUsersWithFavorite(userId);
+  res.render('FavoritePage', { userName: capitalizeFirstLetter(req.user.name), blogs })
 });
 
 app.get('/createBlog/:id', (req, res) => {
@@ -116,6 +118,14 @@ app.get('/myBlog_displayDetail/:id', async (req, res) => {
   const blog = await Blog.getBlogById(blogId);
   const userId = req.user.id;
   res.render('MyBlog_DisplayDetailPage', { userName: capitalizeFirstLetter(req.user.name), userId, blog })
+});
+
+app.get('/favorites_displayDetail/:id', async (req, res) => {
+  const blogId = req.params.id;
+  const blog = await Blog.getBlogById(blogId);
+  const userId = req.user.id;
+  const isFavorited = await Blog.isFavorited(userId, blogId);
+  res.render('Favorite_DisplayDetailPage', { userName: capitalizeFirstLetter(req.user.name), userId, blog, isFavorited });
 });
 
 app.get('/delete/:id', async (req, res) => {
@@ -234,6 +244,30 @@ app.get('/removeFavorite/:id', async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to add favorite.' });
   }
 });
+
+app.get('/removeFavoriteInFavoritePage/:id', async (req, res) => {
+  try {
+    const blogId = req.params.id;
+    const blog = await Blog.getBlogById(blogId);
+    const userId = req.user.id;
+
+    let isFavorited = await Blog.isFavorited(userId, blogId);
+
+    if (isFavorited) {
+      await Blog.removeFavorite(userId, blogId);
+
+      isFavorited = false;
+
+      // Send a response to the client
+      res.render('Favorite_DisplayDetailPage', { userName: capitalizeFirstLetter(req.user.name), userId, blog, isFavorited })
+    }
+  } catch (error) {
+    console.error('Error adding favorite:', error);
+    res.status(500).json({ success: false, message: 'Failed to add favorite.' });
+  }
+});
+
+
 
 
 

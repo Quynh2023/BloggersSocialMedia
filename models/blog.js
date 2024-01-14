@@ -72,16 +72,6 @@ async function updateBlog(blog) {
   }
 }
 
-async function getAllBlogsForAllUsers() {
-  try {
-    const result = await pool.query('SELECT blogs.id AS "id", title, content, type, image, date_and_time, INITCAP(name) AS "author" FROM blogs INNER JOIN users ON blogs.user_id = users.id ORDER BY date_and_time DESC');
-    return result.rows;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
-
 async function getAllBlogsForAllUsersWithFavorite(userId) {
   try {
     const resultFavorite = await pool.query('SELECT blogs.id AS "id", title, content, type, image, date_and_time, INITCAP(name) AS "author", favorite.id AS "favoriteId" FROM blogs INNER JOIN users ON blogs.user_id = users.id LEFT JOIN favorite ON blogs.id = favorite.blog_id AND $1 = favorite.user_id ORDER BY date_and_time DESC', [userId]);
@@ -128,7 +118,6 @@ module.exports = {
   getBlogById,
   deleteBlog,
   updateBlog,
-  getAllBlogsForAllUsers,
   addFavorite,
   isFavorited,
   removeFavorite,

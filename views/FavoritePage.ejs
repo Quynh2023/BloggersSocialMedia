@@ -1,35 +1,52 @@
 <%- include('partials/Header.ejs'); -%>
 
-<div>
-  <br/>
   <div>
-    <p style="position:absolute; left: 20px; font-size: 20px; color:blueviolet">Hello, <%= userName %>!</p>
-  </div>
-  
-  <h3 style="text-align: center; margin-top: 50px; margin-bottom: 50px;">Your Favorites</h3>
-  
-  <div style="display: flex; justify-content: center;">
-    <div class="card mb-3" style="max-width: 50%;">
-      <div class="row g-0">
-        <div class="col-md-4">
-          <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/184.webp" class="img-fluid rounded-start" alt="Sunset Over the Sea" style="object-fit: cover; height: 100%;"/>
-        </div>
-        <div class="col-md-8">
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">
-              This is a wider card with supporting text below as a natural lead-in to
-              additional content. This content is a little bit longer.
-            </p>
-            <p class="card-text">
-              <small class="text-muted">Author: Quynh</small><br/>
-              <small class="text-muted">Date: 2024/06/01</small><br/>
-            </p>
+    <br/><br/> <br/>
+
+      <p style="position:absolute; left: 20px; font-size: 20px; color:blueviolet">Hello, <%= userName %>!</p>
+
+
+    <h3 style="text-align: center; margin-top: 50px; margin-bottom: 50px;">Your Favorites</h3>
+
+    <% for(let blog of blogs) { %>
+      <% if (blog.favoriteId !==null) { %>
+        <div style="display: flex; justify-content: center; margin-top: 20px; margin-bottom: 20px;">
+          <div class="card mb-3" style="width: 50%;">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="data:image/png;base64, <%= blog.image.toString('base64') %>" class="img-fluid rounded-start"
+                  alt="blog image" style="object-fit: cover; height: 100%; height: 230px; width: 300px;" />
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h5 class="card-title">
+                      <%= blog.title %>
+                    </h5>
+                    <% if (blog.favoriteId !==null) { %>
+                      <span>❤️</span>
+                      <% } %>
+                  </div>
+
+                  <p class="card-text">
+                    Type: <%= blog.type%>
+                  </p>
+                  <p class="card-text">
+                    Author: <%= blog.author%>
+                  </p>
+                  <p class="card-text">
+                    <small class="text-muted">Date: <%= new Date(blog.date_and_time).toLocaleString('en-US', {
+                        weekday: 'long' , year: 'numeric' , month: 'numeric' , day: 'numeric' , hour: 'numeric' ,
+                        minute: 'numeric' , second: 'numeric' , hour12: true })%></small><br />
+                  </p>
+                  <a style="color: blue" href="/favorites_displayDetail/<%= blog.id%>">Learn more ➡️</a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
+        <% } %>
 
-<%- include('partials/Footer.ejs'); -%>
+    <%}%>
+  </div>
+
