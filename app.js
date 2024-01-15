@@ -98,6 +98,30 @@ app.get('/types/:id', async(req, res) => {
   res.render('BlogTypePage', { userName: capitalizeFirstLetter(req.user.name), blogs, type })
 });
 
+app.post('/search', async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const author = req.body.author;
+    const blogs = await Blog.getAllBlogsForAllUsersWithSearchAuthor(userId, author);
+    res.render('SearchAuthorPage', { userName: capitalizeFirstLetter(req.user.name), blogs, author });
+  } catch (error) {
+    console.error("Error in /search POST route:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get('/search/:author', async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const author = req.params.author;
+    const blogs = await Blog.getAllBlogsForAllUsersWithSearchAuthor(userId, author);
+    res.render('SearchAuthorPage', { userName: capitalizeFirstLetter(req.user.name), blogs, author });
+  } catch (error) {
+    console.error("Error in /search POST route:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 app.get('/createBlog/:id', (req, res) => {
   const userId = req.user.id;
   res.render('CreateBlogPage', { userName: capitalizeFirstLetter(req.user.name), userId });
@@ -141,6 +165,14 @@ app.get('/blogtype_displayDetail/:id', async (req, res) => {
   const userId = req.user.id;
   const isFavorited = await Blog.isFavorited(userId, blogId);
   res.render('BlogType_DisplayDetailPage', { userName: capitalizeFirstLetter(req.user.name), userId, blog, isFavorited });
+});
+
+app.get('/searchAuthor_displayDetail/:id', async (req, res) => {
+  const blogId = req.params.id;
+  const blog = await Blog.getBlogById(blogId);
+  const userId = req.user.id;
+  const isFavorited = await Blog.isFavorited(userId, blogId);
+  res.render('SearchAuthor_DisplayDetailPage', { userName: capitalizeFirstLetter(req.user.name), userId, blog, isFavorited });
 });
 
 app.get('/delete/:id', async (req, res) => {
@@ -325,6 +357,52 @@ app.get('/removeFavoriteInBlogTypePage/:id', async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to add favorite.' });
   }
 });
+
+app.get('/addFavoriteInSearchAuthorPage/:id', async (req, res) => {
+  try {
+    const blogId = req.params.id;
+    const blog = await Blog.getBlogById(blogId);
+    const userId = req.user.id;
+
+    let isFavorited = await Blog.isFavorited(userId, blogId);
+
+    if (!isFavorited) {
+      await Blog.addFavorite(userId, blogId);
+
+      isFavorited = true;
+
+      // Send a response to the client
+      res.render('SearchAuthor_DisplayDetailPage', { userName: capitalizeFirstLetter(req.user.name), userId, blog, isFavorited })
+    }
+  } catch (error) {
+    console.error('Error adding favorite:', error);
+    res.status(500).json({ success: false, message: 'Failed to add favorite.' });
+  }
+});
+
+app.get('/removeFavoriteInSearchAuthorPage/:id', async (req, res) => {
+  try {
+    const blogId = req.params.id;
+    const blog = await Blog.getBlogById(blogId);
+    const userId = req.user.id;
+
+    let isFavorited = await Blog.isFavorited(userId, blogId);
+
+    if (isFavorited) {
+      await Blog.removeFavorite(userId, blogId);
+
+      isFavorited = false;
+
+      // Send a response to the client
+      res.render('SearchAuthor_DisplayDetailPage', { userName: capitalizeFirstLetter(req.user.name), userId, blog, isFavorited })
+    }
+  } catch (error) {
+    console.error('Error adding favorite:', error);
+    res.status(500).json({ success: false, message: 'Failed to add favorite.' });
+  }
+});
+
+
 
 
 

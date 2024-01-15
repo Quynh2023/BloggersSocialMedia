@@ -92,6 +92,16 @@ async function getAllBlogsForAllUsersWithFavoriteType(userId, type) {
   }
 }
 
+async function getAllBlogsForAllUsersWithSearchAuthor(userId, author) {
+  try {
+    const resultAuthor = await pool.query('SELECT blogs.id AS "id", title, content, type, image, date_and_time, INITCAP(name) AS "author", favorite.id AS "favoriteId" FROM blogs INNER JOIN users ON blogs.user_id = users.id LEFT JOIN favorite ON blogs.id = favorite.blog_id AND $2 = favorite.user_id WHERE LOWER(users.name) = $1 ORDER BY date_and_time DESC', [author.toLowerCase(), userId]);
+    return resultAuthor.rows;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 async function addFavorite(userId, blogId) {
   try {
     const result = await pool.query('INSERT INTO favorite (user_id, blog_id) VALUES ($1, $2) RETURNING id', [userId, blogId]);
@@ -133,4 +143,5 @@ module.exports = {
   removeFavorite,
   getAllBlogsForAllUsersWithFavorite,
   getAllBlogsForAllUsersWithFavoriteType,
+  getAllBlogsForAllUsersWithSearchAuthor,
 };
