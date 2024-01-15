@@ -74,7 +74,8 @@ app.post('/login', (req, res, next) => {
       }
       const userId = req.user.id;
       const blogs = await Blog.getAllBlogsForAllUsersWithFavorite(userId);
-      return res.render('HomePage', { userName: capitalizeFirstLetter(user.name), blogs });
+      const trendyBlogs = await Blog.getBlogsWithHighestFavorite();
+      return res.render('HomePage', { userName: capitalizeFirstLetter(user.name), blogs, trendyBlogs });
     });
   })(req, res, next);
 });
@@ -233,7 +234,8 @@ app.get('/homepage', async (req, res) => {
   try {
     const userId = req.user.id;
     const blogs = await Blog.getAllBlogsForAllUsersWithFavorite(userId);
-    return res.render('HomePage', { userName: capitalizeFirstLetter(req.user.name), blogs });
+    const trendyBlogs = await Blog.getBlogsWithHighestFavorite();
+    return res.render('HomePage', { userName: capitalizeFirstLetter(req.user.name), blogs, trendyBlogs });
   } catch (error) {
     console.error('Error fetching blogs:', error);
     res.status(500).send('Internal Server Error');
@@ -401,12 +403,6 @@ app.get('/removeFavoriteInSearchAuthorPage/:id', async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to add favorite.' });
   }
 });
-
-
-
-
-
-
 
 
 

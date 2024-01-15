@@ -21,3 +21,26 @@ CREATE TABLE favorite (
   blog_id INTEGER REFERENCES blog(id)	
 );
 
+SELECT
+    blogs.id AS blogId,
+    title,
+    content,
+    type,
+    image,
+    date_and_time,
+    INITCAP(users.name) AS author,
+	  COUNT(favorite.id) AS favoriteCount
+FROM blogs
+JOIN users ON blogs.user_id = users.id
+JOIN favorite ON blogs.id = favorite.blog_id
+GROUP BY
+	blogs.id,
+    title,
+    content,
+    type,
+    image,
+    date_and_time,
+    users.name
+ORDER BY favoriteCount DESC, date_and_time DESC
+LIMIT 3
+

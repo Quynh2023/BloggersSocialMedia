@@ -7,14 +7,16 @@
   </style>
 
   <div>
-    <br /><br/> <br/>
+    <br /><br /> <br />
     <p style="position:absolute; left: 20px; font-size: 20px; color:blueviolet">Hello, <%= userName %>!</p>
 
     <h3 style="text-align: center; position:relative; top: 20px; margin-bottom: 50px;">Trending Posts</h3>
 
     <div style="width:50%; margin:auto;">
+
       <!-- Carousel wrapper -->
-      <div id="carouselBasicExample" class="carousel slide carousel-fade" data-mdb-carousel-init>
+      <div id="carouselBasicExample" class="carousel slide carousel-fade"
+        data-mdb-carousel-init>
         <!-- Indicators -->
         <div class="carousel-indicators">
           <button type="button" data-mdb-target="#carouselBasicExample" data-mdb-slide-to="0" class="active"
@@ -28,32 +30,33 @@
         <!-- Inner -->
         <div class="carousel-inner">
           <!-- Single item -->
-          <div class="carousel-item active">
-            <img src="https://mdbcdn.b-cdn.net/img/Photos/Slides/img%20(15).webp" class="d-block w-100"
-              alt="Sunset Over the City" />
-            <div class="carousel-caption d-none d-md-block">
-              <h5>First slide label</h5>
-              <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+          <div class="carousel-item active" onclick="">
+            <img src="data:image/png;base64, <%= trendyBlogs[0].image.toString('base64') %>"
+            class="d-block w-100" style="height: 300px; object-fit: cover;" alt="Sunset Over the City"/>
+            <div class="carousel-caption d-none d-md-block" style="color: black;">
+              <h5><%= trendyBlogs[0].title %></h5>
+              <p>Author: <%= trendyBlogs[0].author %></p>
+              <a style="color: blue" href="/homepage_displayDetail/<%= trendyBlogs[0].id%>">Read more ➡️</a>
             </div>
           </div>
 
-          <!-- Single item -->
           <div class="carousel-item">
-            <img src="https://mdbcdn.b-cdn.net/img/Photos/Slides/img%20(22).webp" class="d-block w-100"
-              alt="Canyon at Nigh" />
-            <div class="carousel-caption d-none d-md-block">
-              <h5>Second slide label</h5>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <img src="data:image/png;base64, <%= trendyBlogs[1].image.toString('base64') %>"
+            class="d-block w-100" style="height: 300px; object-fit: cover;" alt="Sunset Over the City" />
+            <div class="carousel-caption d-none d-md-block" style="color: black;" >
+              <h5><%= trendyBlogs[1].title %></h5>
+              <p>Author: <%= trendyBlogs[1].author %></p>
+              <a style="color: blue" href="/homepage_displayDetail/<%= trendyBlogs[1].id%>">Read more ➡️</a>
             </div>
           </div>
 
-          <!-- Single item -->
           <div class="carousel-item">
-            <img src="https://mdbcdn.b-cdn.net/img/Photos/Slides/img%20(23).webp" class="d-block w-100"
-              alt="Cliff Above a Stormy Sea" />
-            <div class="carousel-caption d-none d-md-block">
-              <h5>Third slide label</h5>
-              <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+            <img src="data:image/png;base64, <%= trendyBlogs[2].image.toString('base64') %>"
+            class="d-block w-100" style="height: 300px; object-fit: cover;" alt="Sunset Over the City" />
+            <div class="carousel-caption d-none d-md-block" style="color: black;">
+              <h5><%= trendyBlogs[2].title %></h5>
+              <p>Author: <%= trendyBlogs[2].author %></p>
+              <a style="color: blue" href="/homepage_displayDetail/<%= trendyBlogs[2].id%>">Read more ➡️</a>
             </div>
           </div>
         </div>
@@ -72,7 +75,10 @@
         </button>
       </div>
       <!-- Carousel wrapper -->
+
+
     </div>
+
 
     <h3 style="text-align: center; margin-top: 50px; margin-bottom: 50px;">All Posts</h3>
 
@@ -107,7 +113,7 @@
                         weekday: 'long' , year: 'numeric' , month: 'numeric' , day: 'numeric' , hour: 'numeric' ,
                         minute: 'numeric' , second: 'numeric' , hour12: true })%></small><br />
                   </p>
-                  <a style="color: blue" href="/homepage_displayDetail/<%= blog.id%>">Learn more ➡️</a>
+                  <a style="color: blue" href="/homepage_displayDetail/<%= blog.id%>">Read more ➡️</a>
                 </div>
               </div>
             </div>
@@ -115,11 +121,11 @@
         </div>
         <%}%>
     </div>
-  </div>
 
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.1.0/mdb.umd.min.js"></script>
+    <script type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.1.0/mdb.umd.min.js"></script>
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.1/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.1.0/mdb.umd.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.1/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.1.0/mdb.umd.min.js"></script>

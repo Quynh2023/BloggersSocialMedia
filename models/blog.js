@@ -102,6 +102,40 @@ async function getAllBlogsForAllUsersWithSearchAuthor(userId, author) {
   }
 }
 
+async function getBlogsWithHighestFavorite() {
+  try {
+    const result = await pool.query(`
+      SELECT
+        blogs.id AS "id",
+        title,
+        content,
+        type,
+        image,
+        date_and_time,
+        INITCAP(users.name) AS author,
+        COUNT(favorite.id) AS favoriteCount
+      FROM blogs
+      JOIN users ON blogs.user_id = users.id
+      JOIN favorite ON blogs.id = favorite.blog_id
+      GROUP BY
+        blogs.id,
+        title,
+        content,
+        type,
+        image,
+        date_and_time,
+        users.name
+      ORDER BY favoriteCount DESC, date_and_time DESC
+      LIMIT 3
+    `);
+
+    return result.rows;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 async function addFavorite(userId, blogId) {
   try {
     const result = await pool.query('INSERT INTO favorite (user_id, blog_id) VALUES ($1, $2) RETURNING id', [userId, blogId]);
@@ -131,7 +165,6 @@ async function removeFavorite(userId, blogId) {
 }
 
 
-
 module.exports = {
   uploadBlog,
   getAllBlogs,
@@ -144,4 +177,5 @@ module.exports = {
   getAllBlogsForAllUsersWithFavorite,
   getAllBlogsForAllUsersWithFavoriteType,
   getAllBlogsForAllUsersWithSearchAuthor,
+  getBlogsWithHighestFavorite,
 };
