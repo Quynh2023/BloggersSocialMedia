@@ -118,7 +118,7 @@ app.get('/search/:author', async (req, res) => {
     const blogs = await Blog.getAllBlogsForAllUsersWithSearchAuthor(userId, author);
     res.render('SearchAuthorPage', { userName: capitalizeFirstLetter(req.user.name), blogs, author });
   } catch (error) {
-    console.error("Error in /search POST route:", error);
+    console.error("Error in /search GET route:", error);
     res.status(500).send("Internal Server Error");
   }
 });
@@ -403,8 +403,6 @@ app.get('/removeFavoriteInSearchAuthorPage/:id', async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to add favorite.' });
   }
 });
-
-
 
 //---------------------check app running------------------------------------------
 app.listen(port, () => {

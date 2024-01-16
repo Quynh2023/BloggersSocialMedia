@@ -5,7 +5,7 @@ CREATE TABLE users(
 	password VARCHAR(100) NOT NULL
 )
 
-CREATE TABLE blog (
+CREATE TABLE blogs (
   id SERIAL PRIMARY KEY,
   title VARCHAR(500) NOT NULL,
   content VARCHAR(10000) NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE blog (
 CREATE TABLE favorite (
   id SERIAL PRIMARY KEY,
   user_id INTEGER REFERENCES users(id),
-  blog_id INTEGER REFERENCES blog(id)	
+  blog_id INTEGER REFERENCES blogs(id)	
 );
 
 SELECT
@@ -43,4 +43,15 @@ GROUP BY
     users.name
 ORDER BY favoriteCount DESC, date_and_time DESC
 LIMIT 3
+
+-- Alter the "favorite" table to add cascading deletion
+ALTER TABLE favorite
+DROP CONSTRAINT IF EXISTS favorite_blog_id_fkey,
+ADD CONSTRAINT favorite_blog_id_fkey
+FOREIGN KEY (blog_id)
+REFERENCES blogs(id)
+ON DELETE CASCADE;
+
+
+
 
