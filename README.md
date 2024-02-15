@@ -4,6 +4,9 @@ Bloggers Social Media is a platform to share blog posts among users  with essent
 ## Technologies
 Technologies: Ejs | Bootstrap | HTML | CSS | JavaScript | Node.js | Express.js | Passport Authentication | PostgreSQL
 
+## Demo
+Check out the video demo [here](https://www.loom.com/share/672a8810aa1d42148afb75e602bf71f4?fbclid=IwAR0ZZw0gztXDjMCWZZhY_XHVyu9WyENWjJNhdbuTNGTN0axKDiBEE1MHnkU).
+
 ## How to run
 To run project:
 1. Open the project in Visual Studio Code
