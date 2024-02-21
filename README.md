@@ -7,6 +7,10 @@ Technologies: Ejs | Bootstrap | HTML | CSS | JavaScript | Node.js | Express.js |
 ## Demo
 Check out the video demo [here](https://www.loom.com/share/a0fd4832fdf0465395086a387da32b4e{:target="_blank"}.
 
+## Demo
+Check out the video demo [here](https://www.loom.com/share/a0fd4832fdf0465395086a387da32b4e){:target="_blank"}.
+
+
 ## How to run
 To run project:
 1. Open the project in Visual Studio Code
