@@ -8,8 +8,7 @@ Technologies: Ejs | Bootstrap | HTML | CSS | JavaScript | Node.js | Express.js |
 Check out the video demo (https://www.loom.com/share/a0fd4832fdf0465395086a387da32b4e).{:target="_blank"}.
 
 ## Demo
-Check out the video demo [here](https://www.loom.com/share/a0fd4832fdf0465395086a387da32b4e){:target="_blank"}.
-
+Check out the video demo <a href="https://www.loom.com/share/a0fd4832fdf0465395086a387da32b4e" target="_blank">here</a>.
 
 ## How to run
 To run project:
